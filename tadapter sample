@@ -1,0 +1,124 @@
+// Utility to track sent messages and ID mappings
+const messageStore = new Map(); // Stores {platformId: {chatbotId, platformId, message}}
+
+// 1. Adapter Interface
+class PlatformAdapter {
+    sendMessage(messageList) {
+        throw new Error('sendMessage method must be implemented');
+    }
+    receiveMessage(platformMessage) {
+        throw new Error('receiveMessage method must be implemented');
+    }
+    transformOutgoingMessage(chatbotMessage) {
+        throw new Error('transformOutgoingMessage method must be implemented');
+    }
+    transformIncomingMessage(platformMessage) {
+        throw new Error('transformIncomingMessage method must be implemented');
+    }
+}
+
+// 2. WhatsApp Adapter (Extended with platformId tracking)
+class WhatsAppAdapter extends PlatformAdapter {
+    constructor(api) {
+        super();
+        this.api = api;
+    }
+
+    async sendMessage(messageList) {
+        const transformedMessages = messageList.map((msg) => this.transformOutgoingMessage(msg));
+
+        for (const message of transformedMessages) {
+            const platformResponse = await this.api.send(message); // Assume API returns a platformId
+            const platformId = platformResponse.message_id;
+
+            // Store mapping between platformId and chatbotId
+            messageStore.set(platformId, {
+                chatbotId: message.chatbotId,
+                platformId: platformId,
+                message: message
+            });
+        }
+    }
+
+    receiveMessage(platformMessage) {
+        const chatbotMessage = this.transformIncomingMessage(platformMessage);
+        const platformId = platformMessage.message_id;
+
+        // Store incoming message by platformId
+        messageStore.set(platformId, {
+            chatbotId: null, // No chatbotId yet, because it was initiated from platform
+            platformId: platformId,
+            message: platformMessage.body
+        });
+
+        return chatbotMessage;
+    }
+
+    transformOutgoingMessage(chatbotMessage) {
+        return {
+            chatbotId: chatbotMessage.id, // Chatbot message ID
+            text: chatbotMessage.message,
+            from: chatbotMessage.role === 'user' ? 'whatsappUser' : 'bot',
+        };
+    }
+
+    transformIncomingMessage(platformMessage) {
+        return {
+            platformId: platformMessage.message_id, // WhatsApp message ID
+            role: 'user',
+            message: platformMessage.body, // Transform WhatsApp format to chatbot format
+        };
+    }
+}
+
+// 5. Chatbot Service (Unchanged)
+class ChatbotService {
+    constructor(api) {
+        this.api = api;
+    }
+
+    sendMessageToBot(messageList) {
+        return this.api.sendMessage(messageList);
+    }
+
+    getBotResponse() {
+        return this.api.getMessages();
+    }
+}
+
+// 6. Main Controller (Enhanced with platformId/chatbotId tracking)
+class MessageController {
+    constructor(platform, api, chatbotService) {
+        switch (platform) {
+            case 'whatsapp':
+                this.adapter = new WhatsAppAdapter(api);
+                break;
+            case 'slack':
+                this.adapter = new SlackAdapter(api);
+                break;
+            case 'telegram':
+                this.adapter = new TelegramAdapter(api);
+                break;
+            default:
+                throw new Error('Unsupported platform');
+        }
+        this.chatbotService = chatbotService;
+    }
+
+    async handleIncomingMessage(platformMessage) {
+        const chatbotMessage = this.adapter.receiveMessage(platformMessage);
+        await this.chatbotService.sendMessageToBot([chatbotMessage]);
+
+        const botResponse = await this.chatbotService.getBotResponse();
+
+        botResponse.forEach((response) => {
+            // Use the chatbotId to find the original message
+            const originalMessage = messageStore.get(response.id);
+            if (originalMessage) {
+                this.adapter.sendMessage([response]);
+            }
+        });
+    }
+}
+
+// Example usage remains the same
