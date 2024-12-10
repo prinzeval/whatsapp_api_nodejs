@@ -1,709 +1,82 @@
-<ul><li>Quickstart | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp Business Platform Node.js SDK Quickstart Learn how to quickly set up and use the Cloud API, hosted by Meta, Node.js SDK to send a message.
-    In this quickstart, you'll only be sending messages via the Cloud API.
-    Receiving messages involves setting up webhooks.
-    For a more comprehensive baseline example to start from, you can use the instead of this quickstart.
-    Prerequisites Before you begin: Install version 16 or later.
-    Complete the steps in the for getting started with the Cloud API.
-    Stop once you've .
-    Respond to that message with anything.
-    This puts the conversation into a session, which allows other messages to be received via API calls for 24-hours.
-    Create Open a new terminal window.
-    Create a new directory for your project and then go to that directory.
-    mkdir wa_quickstart cd ./wa_quickstart Use the npm command to create a simple project definition file (package.json).
-    npm init --yes Install the WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta.
-    npm install whatsapp Configure Create a .env file in the root directory, add the values for the following variables, and save after you're done.
-    WA_PHONE_NUMBER_ID - Your phone number Id, located in the App Dashboard in the WhatsApp dropdown menu > Getting started > Phone number ID .
-    CLOUD_API_ACCESS_TOKEN - You can use the readily provided temporary access token or for this exercise.
-    This is also located in the App Dashboard in the WhatsApp dropdown menu > Getting started > Temporary access token .
-    CLOUD_API_VERSION - Set this to the of the graph API.
-    The .env file should look like # Your WhatsApp phone number Id (sender).
-    WA_PHONE_NUMBER_ID = # System user access token.
-    Recommended: Do not use a temporary access token.
-    CLOUD_API_ACCESS_TOKEN = # Cloud API version number.
-    CLOUD_API_VERSION = v16.0 Code In your project directory, create a file named start.js with the following content with the sender number and recipient number: import WhatsApp from 'whatsapp' ; // Your test sender phone number const wa = new WhatsApp ( << SENDER_NUMBER >> ) ; // Enter the recipient phone number const recipient_number = << RECIPIENT_NUMBER >> ; async function send_message ( ) { try { const sent_text_message = wa .
-    messages .
-    text ( { "body" : "Hello world" } , recipient_number ) ; await sent_text_message .
-    then ( ( res ) => { console .
-    log ( res .
-    rawResponse ( ) ) ; } ) ; } catch ( e ) { console .
-    log ( JSON .
-    stringify ( e ) ) ; } } send_message ( ) ; Anatomy What the code above is doing is: Creating a new instance of the WhatsApp class.
-    This automatically reads from the .env file that was edited.
-    Sending a text type message with the text "Hello world" to the WhatsApp recipient.
-    After the message is sent, it logs the raw response body from the response object to stdout.
-    If there was an error in the request, it will log those to stdout.
-    Look for the "details" value for a human-readable explanation for the error if the Cloud API sent a response.
-    Run Run your application by putting in the following command into terminal: npm start.js note Verify that the test recipient has received the message and the Cloud API shows a statusCode of 200 response.
-    If you received a 200 from the Cloud API, but did not receive the message in WhatsApp, your conversation may have gone beyond the 24-hour user-initiated conversation session.
-    Simply resend a message from the recipient WhatsApp app and then restart your quickstart app to send a new message to the recipient.</li><li>.isStarted | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.webhooks.isStarted() Gets the status of the webhook web server.
-    Example: Start the web server and check if it's running after 5 seconds from application start.
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; async function webhookCallbackFunction ( statusCode , reqHeaders , body , resp , err ) { console .
-    log ( ` Incoming webhook response status code: ${ statusCode } \n\nHeaders: ${ JSON .
-    stringify ( reqHeaders ) } ` ) ; } async function check_status ( ) { setTimeout ( ( ) => { console .
-    log ( ` Webhook listener is running - ${ wa .
-    webhooks .
-    isStarted ( ) } ` ) ; } , 5000 ) ; } wa .
-    webhooks .
-    start ( webhookCallbackFunction ) check_status ( ) ; Returns boolean — the HTTP server running state.</li><li>.updateAccessToken | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.updateAccessToken() Change the access token for making requests to the Cloud API.
-    This will override the value originally read from the environmental variable.
-    Example: Change the access token to 1234abcd : import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const updated_accessToken = "1234abcd" ; const wa = new WhatsApp ( senderNumber ) ; const was_token_changed = wa .
-    updateAccessToken ( updated_accessToken ) ; Arguments accessToken : string — the access token (can be temporary access token or business user token).
-    Returns Boolean — the value was updated.</li><li>VerifyCodeObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Verify Code Object Object used for requesting a verifying a phone number by sending the verification code that was received.
-    Example { "code" : "000000" } Properties code : string — The code that was received from WhatsApp Business Platform verification based on the method originally provided.
-    This is a numerical string.</li><li>ProductObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Product Object The object describing a product in a multi-product message (not for single product).
-    Example { "product_retailer_id" : "product-SKU-in-catalog" } Properties product_retailer_id : string — unique identifier of the product in a catalog.</li><li>TemplateObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Template Object The object describing a WhatsApp message template to use and the components to dynamically fill the parameters of that template with.
-    Example { "name" : "TEMPLATE_NAME" , "language" : { "policy" : "deterministic" , "code" : "LANGUAGE_AND_LOCALE_CODE" } , "components" : [ { "type" : "header" , "parameters" : [ { "type" : "image" , "image" : { "link" : "http(s)://URL" } } ] } , { "type" : "body" , "parameters" : [ { "type" : "text" , "text" : "TEXT_STRING" } , { "type" : "currency" , "currency" : { "fallback_value" : "VALUE" , "code" : "USD" , "amount_1000" : 1000 } } , { "type" : "date_time" , "date_time" : { "fallback_value" : "MONTH DAY, YEAR" } } ] } , { "type" : "button" , "sub_type" : "quick_reply" , "index" : "0" , "parameters" : [ { "type" : "payload" , "payload" : "PAYLOAD" } ] } , { "type" : "button" , "sub_type" : "quick_reply" , "index" : "1" , "parameters" : [ { "type" : "payload" , "payload" : "PAYLOAD" } ] } ] } Properties name : string — name of the template.
-    language : — specifies the language the template may be rendered in.
-    components : [] (optional) — array of components objects containing the parameters of the message.</li><li>TextObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Text Object The object describing a text-based message.
-    Example { "body" : "MESSAGE_CONTENT" , "preview_url" : false } Properties body : string — text of the text message which can contain URLs which begin with http:// or https:// and formatting.
-    See available formatting options .
-    preview_url : boolean (optional) — if a link is in the text, setting this field to true includes a preview box with more information about the link.</li><li>PhoneNumbersResponseObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Phone Numbers Response Object The successful response body JSON from the Cloud API for requesting verification and/or verifying a phone number.
-    Example { "success" : true } Properties success : boolean — the state of a successful request.</li><li>StatusObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Status Object The object describing the status of a message.
-    Example { "status" : "read" , "message_id" : "MESSAGE_ID" } Properties status : "read" — mark message as "read".
-    message_id : string — WhatsApp Message Id (wamid) of the message on which the status update should appear.</li><li>.version | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.version() Retrieves the semantically formatted SDK version.
-    Example: Get the SDK version: import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901 ; const wa = new WhatsApp ( senderNumber ) ; const sdk_version = wa .
-    version ( ) ; Arguments Void Returns String — version string formatted MAJOR.MINOR.PATCH-LABELS.
-    Labels are optional.</li><li>.text | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.messages.text() Send a WhatsApp text message.
-    Example: Send a text message to the phone number 12345678901 .
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; const message = { "body" : "MESSAGE_CONTENT" , "preview_url" : false } ; wa .
-    messages .
-    text ( message , 12345678901 ) ; Arguments body : — the object describing the text to send.
-    recipient : number — the recipient's phone number with country code.
-    replyMessageId : string (optional) — the received WhatsApp message Id to reply back to.
-    Returns Promise — Server response object on success.</li><li>DocumentMediaObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Document Media Object The object required for sending a document message.
-    Can either be a self-hosted and publicly accessible document, or an existing Meta-hosted document in a supported format.
-    Meta or self hosted options have different object requirements.
-    Meta Hosted Document This document must already exist.
-    Example { "id" : "DOCUMENT_ID", "caption" : "CAPTION", "filename" : "FILENAME.PDF" } Properties id : string — the document Id.
-    This Id is returned in the response body when the document was first uploaded.
-    caption : string (optional) — text to be displayed with the document to describe the document.
-    filename : string (optional) - the display filename to override the default.
-    Self Hosted Document The image must be readily accessible by public addresses.
-    Example { "link" : "https://www.example.com/DOCUMENT.PDF" , "caption" : "CAPTION" , "filename" : "FILENAME.PDF" } Properties link : string — the URL where the document is hosted.
-    caption : string (optional) — text to be displayed with the document to describe the document.
-    filename : string (optional) - the display filename to override the default.</li><li>AddressesObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Addresses Object The object describing an address of a contact.
-    Example { "street" : "STREET" , "city" : "CITY" , "state" : "STATE" , "zip" : "ZIP" , "country" : "COUNTRY" , "country_code" : "COUNTRY_CODE" , "type" : "HOME" } Properties street : string (optional) — street address.
-    city : string (optional) — city of the address.
-    state : string (optional) — state or province.
-    zip : string (optional) — zip code.
-    country : string (optional) — country name.
-    country_code : string (optional) — 2-letter ISO 3166 country code.
-    type : "HOME", "WORK" or string (optional) — the type of address which can be standard types of HOME or WORK .</li><li>.updateTimeout | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.updateTimeout() Change the request timeout period from what was originally provided via environmental variables.
-    Default request timeout is 20000ms.
-    Example: Change the request timeout period to 1.5 seconds: import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; const was_timeout_changed = wa .
-    updateTimeout ( 15000 ) ; Arguments ms : number - the timeout period for requests in milliseconds.
-    Returns Boolean — the value was updated.</li><li>.location | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.messages.location() Send a location message.
-    Example: Send the Meta headquarter location to the phone number 12345678901 .
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; const meta_hq_location = { "longitude" : "37.4850729" , "latitude" : "-122.1527671" , "name" : "Meta Headquarters" , "address" : "1 Hacker Way, Menlo Park, CA 94025, USA" } ; wa .
-    messages .
-    location ( meta_hq_location , 12345678901 ) ; Arguments body : — the object describing the location to send.
-    recipient : number — the recipient's phone number with country code.
-    replyMessageId : string (optional) — the received WhatsApp message Id to reply back to.
-    Returns Promise — Server response object on success.</li><li>InteractiveObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Interactive Object The object describing an interactive message.
-    Each interactive object type has different object requirements.
-    List The object describing a list message interactive object.
-    Example { "type" : "list" , "header" : { "type" : "text" , "text" : "HEADER_TEXT" } , "body" : { "text" : "BODY_TEXT" } , "footer" : { "text" : "FOOTER_TEXT" } , "action" : { "button" : "BUTTON_TEXT" , "sections" : [ { "title" : "SECTION_1_TITLE" , "rows" : [ { "id" : "SECTION_1_ROW_1_ID" , "title" : "SECTION_1_ROW_1_TITLE" , "description" : "SECTION_1_ROW_1_DESCRIPTION" } , { "id" : "SECTION_1_ROW_2_ID" , "title" : "SECTION_1_ROW_2_TITLE" , "description" : "SECTION_1_ROW_2_DESCRIPTION" } ] } , { "title" : "SECTION_2_TITLE" , "rows" : [ { "id" : "SECTION_2_ROW_1_ID" , "title" : "SECTION_2_ROW_1_TITLE" , "description" : "SECTION_2_ROW_1_DESCRIPTION" } , { "id" : "SECTION_2_ROW_2_ID" , "title" : "SECTION_2_ROW_2_TITLE" , "description" : "SECTION_2_ROW_2_DESCRIPTION" } ] } ] } } Properties type : "list" — interactive object type of list .
-    body : — content of the message.
-    Emojis and markdown are supported.
-    Maximum length: 1024 characters.
-    footer : (optional) — footer content.
-    Emojis, markdown, and links are supported.
-    Maximum length: 60 characters.
-    header : (optional) — header content displayed on top of a message.
-    action : — action you want the user to perform after reading the message.
-    Multi-product The object describing a multi-product interactive object.
-    Example { "type" : "product_list" , "header" : { "type" : "text" , "text" : "header-content" } , "body" : { "text" : "body-content" } , "footer" : { "text" : "footer-content" } , "action" : { "catalog_id" : "CATALOG_ID" , "sections" : [ { "title" : "section-title" , "product_items" : [ { "product_retailer_id" : "product-SKU-in-catalog" } , { "product_retailer_id" : "product-SKU-in-catalog" } ] } , { "title" : "section-title" , "product_items" : [ { "product_retailer_id" : "product-SKU-in-catalog" } , { "product_retailer_id" : "product-SKU-in-catalog" } ] } ] } } Properties type : "product_list" — interactive object type of product_list .
-    body : — content of the message.
-    Emojis and markdown are supported.
-    Maximum length: 1024 characters.
-    footer : (optional) — footer content.
-    Emojis, markdown, and links are supported.
-    Maximum length: 60 characters.
-    header : — header content displayed on top of a message.
-    action : — action you want the user to perform after reading the message.
-    Single product The object describing a single product interactive object.
-    Example { "type" : "product" , "body" : { "text" : "optional body text" } , "footer" : { "text" : "optional footer text" } , "action" : { "catalog_id" : "CATALOG_ID" , "product_retailer_id" : "ID_TEST_ITEM_1" } } Properties type : "product" — interactive object type of product .
-    body : (optional) — content of the message.
-    Emojis and markdown are supported.
-    Maximum length: 1024 characters.
-    footer : (optional) — footer content.
-    Emojis, markdown, and links are supported.
-    Maximum length: 60 characters.
-    header : (optional) — header content displayed on top of a message.
-    action : — action you want the user to perform after reading the message.
-    Reply button The object describing a reply button interactive object.
-    Example { "type" : "button" , "body" : { "text" : "BUTTON_TEXT" } , "action" : { "buttons" : [ { "type" : "reply" , "reply" : { "id" : "UNIQUE_BUTTON_ID_1" , "title" : "BUTTON_TITLE_1" } } , { "type" : "reply" , "reply" : { "id" : "UNIQUE_BUTTON_ID_2" , "title" : "BUTTON_TITLE_2" } } ] } } Properties type : "button" — interactive object type of button .
-    body : — content of the message.
-    Emojis and markdown are supported.
-    Maximum length: 1024 characters.
-    footer : (optional) — footer content.
-    Emojis, markdown, and links are supported.
-    Maximum length: 60 characters.
-    header : (optional) — header content displayed on top of a message.
-    action : — action you want the user to perform after reading the message.</li><li>EmailObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Email Object The object describing an email address of a contact.
-    Example { "email" : "email@example.com" , "type" : "HOME" } Properties email : string (optional) — street address.
-    type : "HOME" or "WORK" (optional) — the type of address which can be standard types of HOME or WORK .</li><li>One doc tagged with "Getting started" | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    Learn how to quickly set up and use the Cloud API, hosted by Meta, Node.js SDK to send a message.
-    In this quickstart, you'll only be sending messages via the Cloud API.
-    Receiving messages involves setting up webhooks.
-    For a more comprehensive baseline example to start from, you can use the WhatsApp Node.js Project Template instead of this quickstart.</li><li>.status | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.messages.status() Mark a message as read.
-    Example: Listen for incoming message webhook events and mark as message as read once received.
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; async function custom_callback ( statusCode , reqHeaders , body , resp , err ) { // Send a 200 so the webhooks service knows you received the message if ( resp ) { resp .
-    writeHead ( statusCode ) ; resp .
-    end ( ) ; } // Mark message as read if ( body ?.
-    entry [ 0 ] .
-    changes [ 0 ] .
-    field == "messages" && body .
-    entry [ 0 ] .
-    changes [ 0 ] .
-    value .
-    messages ) { message_status_read ( body .
-    entry [ 0 ] .
-    changes [ 0 ] .
-    value .
-    messages [ 0 ] .
-    id ) ; } } wa .
-    webhooks .
-    start ( custom_callback ) ; Arguments body : — the object describing the message status update.
-    Returns Promise — Server response object on success.</li><li>SectionObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Section Object The object describing individual sections for list messages and multi-product messages.
-    The two types have different object requirements.
-    List messages Example { "title" : "SECTION_1_TITLE" , "rows" : [ { "id" : "SECTION_1_ROW_1_ID" , "title" : "SECTION_1_ROW_1_TITLE" , "description" : "SECTION_1_ROW_1_DESCRIPTION" } , { "id" : "SECTION_1_ROW_2_ID" , "title" : "SECTION_1_ROW_2_TITLE" , "description" : "SECTION_1_ROW_2_DESCRIPTION" } ] } Properties rows : or undefined — array of RowObject for list message.
-    title : string (optional) — contact's last name.
-    Multi-product messages Example { "title" : "section-title" , "product_items" : [ { "product_retailer_id" : "product-SKU-in-catalog" } , { "product_retailer_id" : "product-SKU-in-catalog" } ] } Properties product_items : or undefined — array of ProductObject for multi-product message.
-    title : string (optional) — contact's last name.</li><li>ReplyButtonObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Reply Buttons Object The object describing a reply button's properties.
-    Example { "type" : "reply" , "reply" : { "id" : "UNIQUE_BUTTON_ID_1" , "title" : "BUTTON_TITLE_1" } } Properties type : "reply" — only supported type is reply (for reply button).
-    reply : — object describing the button.</li><li>this | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp class This is the main class that is instantiated to create a client for the SDK.
-    Configuration is set via environmental variables.
-    Applications that are built in development mode can use a .env file located in the root of their project, but production applications must have these environmental variables set through other mechanisms before runtime.
-    Example: Create a new SDK client for the WhatsApp sender phone number Id 12345678901234567890 .
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; Arguments senderNumberId : number (optional) — The phone number Id of the sender registered in the Cloud API, including the country code (without any symbols).
-    This is not required if WA_PHONE_NUMBER_ID is available as an environmental variable (e.g.
-    set in your .env file), but is required if it is omitted there.
-    This allows a single app to send using multiple registered numbers.
-    Returns Object — WhatsApp class instance.</li><li>DateTimeObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Date Time Object The object describing date time.
-    This is only provided as a component parameter for a message template.
-    Example { "fallback_value" : "1 January, 1990" , } Properties fallback_value : string — default text.</li><li>.updateSenderNumberId | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.updateSenderNumberId() Change the sender phone number Id.
-    Should only input a value that is registered with the Cloud API otherwise requests will send an unauthorized error.
-    Example: Change the sender number Id to 09876543210987654321 : import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const sender_number_2 = 09876543210987654321 ; const wa = new WhatsApp ( senderNumber ) ; const was_sender_changed = wa .
-    updateSenderNumberId ( sender_number_2 ) ; Arguments phoneNumberId : number — the WhatsApp phone number Id of the sender.
-    Returns Boolean — the value was updated.</li><li>this | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Messages class This is the messages class that is instantiated by the WhatsApp class.
-    The messages class object can be referenced with <<SDK_NAMESPACE>>.messages to access the member functions.
-    Example: Send a text-only message to the phone number 12345678901 .
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; wa .
-    messages .
-    text ( { "body" : "MESSAGE_CONTENT" } , 12345678901 ) ; Arguments config : — SDK configuration object.
-    HttpsClient : RequesterClass — the HTTPS requester class object, including the HTTP client instance to make requests with.
-    Returns Object — Messages class instance.</li><li>ImageMediaObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Image Media Object The object required for sending an image message.
-    Can either be a self-hosted and publicly accessible image, or an existing Meta-hosted image in a supported format.
-    Meta or self hosted options have different object requirements.
-    Meta Hosted Image This image must already exist in PNG or JPG format.
-    Example { "id" : "IMAGE_ID" , "caption" : "CAPTION" } Properties id : string — the image Id.
-    This Id is returned in the response body when the image was first uploaded.
-    caption : string (optional) — text to be displayed with the image to describe the image.
-    Self Hosted Image The image must be readily accessible by public addresses and in PNG or JPG format.
-    Example { "link" : new URL ( "https://www.example.com" ) .
-    href , "caption" : "CAPTION" } Properties link : string — link to the publicly hosted image.
-    caption : string (optional) — text to be displayed with the image to describe the image.</li><li>.document | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.messages.document() Send an existing self-hosted or Meta hosted document.
-    Supported document formats: TXT PDF PPT or PPTX DOC or DOCX XLS or XLSX ODF or FODT ODP or FODP ODS or FODS Example: Send a Meta-hosted message and then send an externally hosted document to the phone number 12345678901 .
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; const meta_hosted_document = { "id" : "123456abcde" , "caption" : "My important document" , "filename" : "example.pdf" } ; const self_hosted_document = { "link" : new URL ( "https://example.com/example_1234.pdf" ) .
-    href , "caption" : "My important document" , "filename" : "example.pdf" } ; await wa .
-    messages .
-    document ( meta_hosted_document , 12345678901 ) ; wa .
-    messages .
-    document ( self_hosted_document , 12345678901 ) ; Arguments body : — the object describing the document to send.
-    recipient : number — the recipient's phone number with country code.
-    replyMessageId : string (optional) — the received WhatsApp message Id to reply back to.
-    Returns Promise — Server response object on success.</li><li>RowObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Row Object The object describing a a list message's rows.
-    Example { "id" : "SECTION_1_ROW_1_ID" , "title" : "SECTION_1_ROW_1_TITLE" , "description" : "SECTION_1_ROW_1_DESCRIPTION" } Properties id : string — unique identifier of the row.
-    Maximum length of 200 characters.
-    title : string — title text of the row.
-    Maximum length of 24 characters.
-    description : string (optional) — description content of the row.
-    Maximum length of 72 characters.</li><li>.interactive | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.messages.interactive() Send an interactive message to prompt a recipient to select from provided options.
-    There are 4 interactive message types: Reply buttons — this allows the recipient to select a specific option (up to 3) to respond with.
-    Each individual button can be given a unique Id to systematically perform backend logic.
-    One example is for multi-language support, while performing the same application operation based on the Id across all languages.
-    List - this displays a list of selectable items that can be split into sections (maximum of 10).
-    The recipient can selecting an item from the provided list.
-    Product (aka single product) — displays a single product from the facebook store catalog along with customizable message fields.
-    Product-list (aka multi-product) — displays several products from a facebook store catalog along with customizable message fields.
-    Examples: Reply button Send a message with two buttons to the phone number 12345678901 .
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; const reply_btn_message = { "type" : "button" , "body" : { "text" : "BUTTON_TEXT" } , "action" : { "buttons" : [ { "type" : "reply" , "reply" : { "id" : "UNIQUE_BUTTON_ID_1" , "title" : "BUTTON_TITLE_1" } } , { "type" : "reply" , "reply" : { "id" : "UNIQUE_BUTTON_ID_2" , "title" : "BUTTON_TITLE_2" } } ] } } wa .
-    messages .
-    interactive ( reply_btn_message , 12345678901 ) ; List Send a list message with two sections and two products per section to the phone number 12345678901 .
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; const list_message = { "type" : "list" , "header" : { "type" : "text" , "text" : "HEADER_TEXT" } , "body" : { "text" : "BODY_TEXT" } , "footer" : { "text" : "FOOTER_TEXT" } , "action" : { "button" : "BUTTON_TEXT" , "sections" : [ { "title" : "SECTION_1_TITLE" , "rows" : [ { "id" : "SECTION_1_ROW_1_ID" , "title" : "SECTION_1_ROW_1_TITLE" , "description" : "SECTION_1_ROW_1_DESCRIPTION" } , { "id" : "SECTION_1_ROW_2_ID" , "title" : "SECTION_1_ROW_2_TITLE" , "description" : "SECTION_1_ROW_2_DESCRIPTION" } ] } , { "title" : "SECTION_2_TITLE" , "rows" : [ { "id" : "SECTION_2_ROW_1_ID" , "title" : "SECTION_2_ROW_1_TITLE" , "description" : "SECTION_2_ROW_1_DESCRIPTION" } , { "id" : "SECTION_2_ROW_2_ID" , "title" : "SECTION_2_ROW_2_TITLE" , "description" : "SECTION_2_ROW_2_DESCRIPTION" } ] } ] } } wa .
-    messages .
-    interactive ( list_message , 12345678901 ) ; Single product Send a single product message to the phone number 12345678901 .
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; const prod_message = { "type" : "product" , "body" : { "text" : "optional body text" } , "footer" : { "text" : "optional footer text" } , "action" : { "catalog_id" : "CATALOG_ID" , "product_retailer_id" : "ID_TEST_ITEM_1" } } wa .
-    messages .
-    interactive ( prod_message , 12345678901 ) ; Mutli-product Send a multi-product message with two sections and two products per section to the phone number 12345678901 .
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; const multi_prod_message = { "type" : "product_list" , "header" : { "type" : "text" , "text" : "header-content" } , "body" : { "text" : "body-content" } , "footer" : { "text" : "footer-content" } , "action" : { "catalog_id" : "CATALOG_ID" , "sections" : [ { "title" : "section-title" , "product_items" : [ { "product_retailer_id" : "product-SKU-in-catalog" } , { "product_retailer_id" : "product-SKU-in-catalog" } , ...
-    ] } , { "title" : "section-title" , "product_items" : [ { "product_retailer_id" : "product-SKU-in-catalog" } , { "product_retailer_id" : "product-SKU-in-catalog" } , ...
-    ] } ] } } wa .
-    messages .
-    interactive ( multi_prod_message , 12345678901 ) ; Arguments body : — the object describing the interactive message to send.
-    recipient : number — the recipient's phone number with country code.
-    replyMessageId : string (optional) — the received WhatsApp message Id to reply back to.
-    Returns Promise — Server response object on success.</li><li>WAConfigType | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page SDK Configuration Type This is the object that is used to configure each of the sub-classes of the SDK.
-    Example { "wa_base_url" : "https://graph.facebook.com/" , "m4d_app_id" : 12345 , "m4d_app_secret" : "example_app_secret_123" , "wa_phone_number_id" : 0987654321 , "wa_business_account_id" : 1234567890 , "cloud_api_version" : "v16" , "cloud_api_access_token" : "example_access_token_123" , "webhook_endpoint" : "webhook" , "webhook_verification_token" : "1234567890abcd" , "listener_port" : 3000 , "max_retries_after_wait" : 30 , "request_timeout" : 20000 , "debug" : true } Properties wa_base_url : string — m4d_app_id : number - m4d_app_secret : string - wa_phone_number_id : number - wa_business_account_id : number - cloud_api_version : string - cloud_api_access_token : string - webhook_endpoint : string - webhook_verification_token : string - listener_port : number - max_retries_after_wait : number - request_timeout : number - debug : boolean -</li><li>.verifyCode | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.phoneNumbers.verifyCode() Verify a phone number using the code that was received earlier from a verification code request.
-    Example: Use the verification code "00000" that was received earlier to verify the number.
-    Typescript import WhatsApp from 'whatsapp' ; const senderNumberId = 12345678901234567890 ; const wa = new WhatsApp ( senderNumberId ) ; const body : VerifyCodeObject = { "code" : "00000" } wa .
-    phoneNumbers .
-    verifyCode ( body ) ; Javascript import WhatsApp from 'whatsapp' ; const senderNumberId = 12345678901234567890 ; const wa = new WhatsApp ( senderNumberId ) ; const body = { "code" : "00000" } wa .
-    phoneNumbers .
-    verifyCode ( body ) ; Arguments body : — Object specifying the method to receive the verification code ("SMS" or "VOICE") and the language.
-    Returns Promise — Server response object on success.
-    A successful response body JSON will be of type .</li><li>CurrencyObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Currency Object The object describing currency.
-    This is only provided as a component parameter for a message template.
-    Example { "fallback_value" : "USD$1.00" , "code" : "USD" , "amount_1000" : 1000 } Properties fallback_value : string — default text if localization fails.
-    code : string — 3-character currency code as defined in ISO 4217.
-    amount_1000 : number — the currency amount multiplied by 1000.</li><li>this | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Phone numbers class This is the phone numbers class that is instantiated by the WhatsApp class.
-    The phone numbers class object can be referenced with <<SDK_NAMESPACE>>.phoneNumbers to access the member functions.
-    Example: Request a phone number verification code to be sent via SMS in the english language.
-    Typescript import WhatsApp from 'whatsapp' ; const senderNumberId = 12345678901234567890 ; const wa = new WhatsApp ( senderNumberId ) ; const body = { "code_method" : WhatsApp .
-    Enum .
-    RequestCodeMethodsEnum .
-    Sms , "language" : WhatsApp .
-    Enum .
-    English } wa .
-    phoneNumbers .
-    requestCode ( body ) ; Javascript import WhatsApp from 'whatsapp' ; const senderNumberId = 12345678901234567890 ; const wa = new WhatsApp ( senderNumberId ) ; const body = { "code_method" : "SMS" , "language" : "en" } wa .
-    phoneNumbers .
-    requestCode ( body ) ; Arguments config : — SDK configuration object.
-    HttpsClient : RequesterClass — the HTTPS requester class object, including the HTTP client instance to make requests with.
-    Returns Object — Phone numbers class instance.</li><li>.setPin | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.twoStepVerification.setPin() Sets the verification pin to the provided 6-digit number.
-    Having a pin for use with two factor verification is required and cannot be disabled/removed.
-    Example: Set the two-step verification pin to 123456 .
-    import WhatsApp from 'whatsapp' ; const senderNumberId = 12345678901234567890 ; const wa = new WhatsApp ( senderNumberId ) ; wa .
-    twoStepVerification .
-    setPin ( 123456 ) ; Arguments pin : number — The 6-digit pin code that will be used for future two-step verification.
-    Returns Promise — Server response object on success.
-    A successful response body JSON will be of type .</li><li>ButtonParameterObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Button Parameter Object The object describing a either a quick reply or URL button parameter for a button type template message component.
-    Quick reply button Refers to a previously created quick reply button that allows for the customer to return a predefined message.
-    Example { "type" : "payload" , "payload" : "PAYLOAD_STRING" , } Properties type : "payload" — type of parameter for the button.
-    payload : string — developer-defined payload that is returned when the button is clicked in addition to the display text on the button.
-    URL button Refers to a previously created button that allows the customer to visit the URL generated by appending the text parameter to the predefined prefix URL in the template.
-    Example { "type" : "text" , "text" : "TEXT_STRING" , } Properties formatted_name : "text" — type of parameter for the button.
-    text : string — developer-provided suffix that is appended to the predefined prefix URL in the template.</li><li>SetPinResponseObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Set Pin Response Object The successful response body JSON from the Cloud API for setting the two-step verification pin.
-    Example { "success" : true } Properties success : boolean — the state of updating the two-step verification pin.</li><li>ComponentObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Component Object The object containing the component to fill available message template parameter(s) with text, currency, date-time, document, image, video, or button.
-    Each type has different requirements.
-    Currency Example { "type" : "body" , "parameters" : [ { "type" : "currency" , "currency" : { "fallback_value" : "VALUE" , "code" : "USD" , "amount_1000" : 1000 } } ] } Properties type : "header", "body" — type of component, can be either header or body .
-    Text-based templates only support the type=body and only text components.
-    parameters : [] — array of parameter objects with the content of the message.
-    Array can contain a mix of different component parameter types.
-    Button The object containing the component to fill a message template parameter(s) with a button.
-    Example { "type" : "button" , "sub_type" : "quick_reply" , "index" : "0" , "parameters" : [ { "type" : "payload" , "payload" : "PAYLOAD" } ] } Properties type : "button" — the type of component, can only be the value button .
-    sub_type : "quick_reply" or "url" — quick_reply refers to a previously created quick reply button that allows for the customer to return a predefined message.
-    url refers to a previously created button that allows the customer to visit the URL generated by appending the text parameter to the predefined prefix URL in the template.
-    index : string (optional) — position index of the button.
-    You can have up to 3 buttons using index values of 0 to 2.
-    parameters : [] — array of button parameter objects.
-    Can be either Quick Reply Button Parameter Object or URL Button Parameter Object that matches sub_type .
-    Date-time Example { "type" : "body" , "parameters" : [ { "type" : "date_time" , "date_time" : { "fallback_value" : "MONTH DAY, YEAR" } } ] } Properties type : "header", "body" — type of component, can be either header or body .
-    Text-based templates only support the type=body and only text components.
-    parameters : [] — array of parameter objects with the content of the message.
-    Array can contain a mix of different component parameter types.
-    Document Example { "type" : "body" , "parameters" : [ { "type" : "document" , "image" : { "link" : new URL ( "https://www.example.com/DOCUMENT.PDF" ) .
-    href } } ] } Properties type : "header", "body" — type of component, can be either header or body .
-    Text-based templates only support the type=body and only text components.
-    parameters : [] — array of parameter objects with the content of the message.
-    Array can contain a mix of different component parameter types.
-    Image Example { "type" : "body" , "parameters" : [ { "type" : "image" , "image" : { "link" : new URL ( "https://www.example.com/IMAGE.PNG" ) .
-    href } } ] } Properties type : "header", "body" — type of component, can be either header or body .
-    Text-based templates only support the type=body and only text components.
-    parameters : [] — array of parameter objects with the content of the message.
-    Array can contain a mix of different component parameter types.
-    Text Example { "type" : "body" , "parameters" : [ { "type" : "text" , "text" : "TEXT_STRING" } ] } Properties type : "header", "body" — type of component, can be either header or body .
-    Text-based templates only support the type=body.
-    parameters : [] — array of parameter objects with the content of the message.
-    Array can contain a mix of different component parameter types.
-    Video Example { "type" : "body" , "parameters" : [ { "type" : "video" , "image" : { "link" : new URL ( "https://www.example.com/VIDEO.MP4" ) .
-    href } } ] } Properties type : "header", "body" — type of component, can be either header or body .
-    Text-based templates only support the type=body and only text components.
-    parameters : [] — array of parameter objects with the content of the message.
-    Array can contain a mix of different component parameter types.</li><li>LanguageObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Language Object The object describing the message template language.
-    Example { "policy" : "deterministic" , "code" : "LANGUAGE_AND_LOCALE_CODE" } Properties policy : "deterministic" — the language policy the message should follow.
-    The only supported option is deterministic .
-    code : string — the two-character code of the language or locale to use.
-    For all codes, see .</li><li>.audio | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.messages.audio() Send an existing self-hosted or Meta hosted audio file.
-    Supported audio formats: AAC MP4 MPEG AMR OGG Note: The base audio/ogg type is not supported.
-    Example: Send a Meta-hosted message and then send an externally hosted audio file to the phone number 12345678901 .
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; const meta_hosted_audio = { "id" : "123456abcde" , "caption" : "My audio file" , "filename" : "example.mp4" } ; const selfHostedAudio = { "link" : new URL ( "https://example.com/example_1234.mp4" ) .
-    href , "caption" : "My audio file" , "filename" : "example.mp4" } ; await wa .
-    messages .
-    audio ( meta_hosted_audio , 12345678901 ) ; wa .
-    messages .
-    audio ( selfHostedAudio , 12345678901 ) ; Arguments body : — the object describing the audio file to send.
-    recipient : number — the recipient's phone number with country code.
-    replyMessageId : string (optional) — the received WhatsApp message Id to reply back to.
-    Returns Promise — Server response object on success.</li><li>.stop | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.webhooks.stop() This stops the web server listening the defined port for webhook events.
-    Example: Start the web server and then stop it if it's running.
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; async function webhookCallbackFunction ( statusCode , reqHeaders , body , resp , err ) { console .
-    log ( ` Incoming webhook response status code: ${ statusCode } \n\nHeaders: ${ JSON .
-    stringify ( reqHeaders ) } ` ) ; } function webhook_stop_check_callback ( err ) { if ( err ) console .
-    log ( ` Error stopping webhook web server: ${ JSON .
-    stringify ( err ) } ` ) ; } async function start ( ) { if ( await wa .
-    webhooks .
-    start ( webhookCallbackFunction ) ) wa .
-    webhooks .
-    stop ( webhook_stop_check_callback ) ; } Arguments webhook_stop_cb_function : function( Error ) — A function that's called if there is an error shutting down the HTTP web server.
-    Returns boolean — the HTTP server running state.</li><li>URLObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page URL Object The object describing a contact's URL.
-    Example { "url" : new URL ( "https://www.example.com/" ) .
-    href , "type" : "WORK" } Properties url : string (optional) — url relevant to the contact.
-    type : "HOME" or "WORK" (optional) — the type of the contact's link.</li><li>webhookCallbackFunction | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Webhook Callback Function The user defined callback that is passed in to start the web server listening for webhook events.
-    This receives all webhook events from the graph API, not just incoming messages.
-    You are only able to respond to webhook events if they are a POST request and have a validated x-hub-signature-256 string.
-    Example async function custom_callback ( statusCode , RequestHeaders , body , response , error ) { console .
-    log ( ` Incoming webhook response status code: ${ statusCode } \n\nHeaders: ${ JSON .
-    stringify ( RequestHeaders ) } ` ) ; // Send a 200 so the webhooks service knows you received the message if ( response ) { if ( body ) console .
-    log ( ` Body: ${ JSON .
-    stringify ( body ) } ` ) ; response .
-    writeHead ( statusCode , { "Content-Type" : "text/plain" } ) ; response .
-    end ( ) ; } if ( error ) { console .
-    log ( ` ERROR: ${ error } ` ) ; } } Arguments statusCode : number — the response status code that was either sent or recommended to be sent in the callback response.
-    RequestHeaders : HTTP request object — request headers object from the node HTTP library.
-    body : Webhook_Request_Body (optional) — the Cloud API's webhook request body.
-    Only exists if there was a body in the request.
-    response : HTTP response object (optional) — standard HTTP response object from the node HTTP library.
-    Only exists if a response wasn't already sent (validated request).
-    error : Error (optional) — present when there are errors with the incoming request.</li><li>ContactObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Contact Object The object required for sharing contact(s) information.
-    Example [ { "addresses" : [ { "street" : "STREET" , "city" : "CITY" , "state" : "STATE" , "zip" : "ZIP" , "country" : "COUNTRY" , "country_code" : "COUNTRY_CODE" , "type" : "HOME" } ] , "birthday" : "1911-01-11" , "emails" : [ { "email" : "EMAIL@EXAMPLE.COM" , "type" : "WORK" } ] , "name" : { "formatted_name" : "NAME" , "first_name" : "FIRST_NAME" , "last_name" : "LAST_NAME" , "middle_name" : "MIDDLE_NAME" , "suffix" : "SUFFIX" , "prefix" : "PREFIX" } , "org" : { "company" : "COMPANY" , "department" : "DEPARTMENT" , "title" : "TITLE" } , "phones" : [ { "phone" : "PHONE_NUMBER" , "type" : "HOME" } , { "phone" : "PHONE_NUMBER" , "type" : "WORK" , "wa_id" : "PHONE_OR_WA_ID" } ] , "urls" : [ { "url" : new URL ( "https://wwww.example.com" ) .
-    href , "type" : "WORK" } ] } ] Properties addresses : [] (optional) — array of the contact's addresses.
-    birthday : string (optional) — birthday in YYYY-MM-DD format.
-    emails : [] (optional) — array of the contact's emails.
-    name : — contact's name.
-    org : (optional) — the contact's organization.
-    phones : [] (optional) — array of the contact's phone numbers.
-    urls [] : [] (optional) — array of the contact's URLs.</li><li>StickerMediaObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Sticker Media Object The object required for sending a sticker message.
-    Static and animated third-party outbound stickers are supported in addition to all types of inbound stickers.
-    A static sticker needs to be 512x512 pixels and cannot exceed 100 KB.
-    An animated sticker must be 512x512 pixels and cannot exceed 500 KB.
-    Meta or self hosted options have different object requirements.
-    Meta Hosted Image This sticker must already exist.
-    Example { "id" : "IMAGE_ID" , } Properties id : string — the media object Id.
-    This Id is returned in the response body when the sticker was first uploaded.
-    Self Hosted Image The sticker must be readily accessible by public addresses.
-    Example { "link" : new URL ( "https://www.example.com" ) .
-    href , } Properties link : string — link to the publicly hosted sticker.</li><li>.image | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.messages.image() Send an existing self-hosted or Meta hosted image.
-    Image must be of format: PNG JPG Example: Send a Meta-hosted message and then send an externally hosted image to the phone number 12345678901 .
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; const meta_hosted_image = { "id" : "123456abcde" , "caption" : "My image" } ; const self_hosted_image = { "link" : new URL ( "https://example.com/example.png" ) .
-    href , "caption" : "My image" } ; await wa .
-    messages .
-    image ( meta_hosted_image , 12345678901 ) ; wa .
-    messages .
-    image ( self_hosted_image , 12345678901 ) ; Arguments body : — the object describing the image to send.
-    recipient : number — the recipient's phone number with country code.
-    replyMessageId : string (optional) — the received WhatsApp message Id to reply back to.
-    Returns Promise — Server response object on success.</li><li>.requestCode | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.phoneNumbers.requestCode() Requests a verification code to be sent to number configured in the current WhatsApp client instance.
-    Phone numbers can be verified using a code sent via either SMS or voice call in a specified language.
-    Example: Request a phone number verification code to be sent via SMS in the english language.
-    Typescript import WhatsApp from 'whatsapp' ; const senderNumberId = 12345678901234567890 ; const wa = new WhatsApp ( senderNumberId ) ; const body : RequestCodeObject = { "code_method" : WhatsApp .
-    Enum .
-    RequestCodeMethodsEnum .
-    Sms , "language" : WhatsApp .
-    Enum .
-    English } wa .
-    phoneNumbers .
-    requestCode ( body ) ; Javascript import WhatsApp from 'whatsapp' ; const senderNumberId = 12345678901234567890 ; const wa = new WhatsApp ( senderNumberId ) ; const body = { "code_method" : "SMS" , "language" : "en" } wa .
-    phoneNumbers .
-    requestCode ( body ) ; Arguments body : — Object specifying the method to receive the verification code ("SMS" or "VOICE") and the language.
-    Returns Promise — Server response object on success.
-    A successful response body JSON will be of type .</li><li>Receiving Messages | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Receiving WhatsApp Messages The SDK provides a convenience method for creating a web server to receive incoming payloads and creating your own custom logic.
-    This web server currently uses a single process and is not intended for multi-instance environments.
-    You can use the utilities to build your own or contribute to this open source project.
-    Prerequisites Install version 16 or later.
-    A publicly accessible HTTPS (not HTTP) URL.
-    For development, you can use tools such as or to route a tunnel to the listener port.
-    Have a working application.
-    Configure Open the .env file in the root directory, add the values for the following variables, and save after you're done: WEBHOOK_ENDPOINT - The listener path for your application.
-    Recommend setting the environmental variable to webhook .
-    WEBHOOK_VERIFICATION_TOKEN - This is a secret string that the Cloud API will send in it's subscribe message payload so you can verify it's a trusted source.
-    Recommended you use a long string of alpha-numerics.
-    LISTENER_PORT - The network port the application will listen on.
-    Leaving this empty will set it to the default port 3000.
-    The .env file should look like # Your WhatsApp phone number Id.
-    WA_PHONE_NUMBER_ID = # System user access token.
-    Recommended: Do not use a temporary access token.
-    CLOUD_API_ACCESS_TOKEN = # Cloud API version number.
-    CLOUD_API_VERSION = v16.0 # Customize your incoming webhook listener endpoint.
-    Path should be https://{host}/{WEBHOOK_ENDPOINT}.
-    # A trailing slash is not added by default, so the variable should include that if it's required by your API gateway.
-    WEBHOOK_ENDPOINT = webhook/ # A custom verification token string to validate incoming webhook payloads.
-    # Needs to match webhook configuration.
-    WEBHOOK_VERIFICATION_TOKEN = 1234567890abcd # Override the default app listener port (optional & default 3000).
-    LISTENER_PORT = 3000 Code Create a new file called listen.js file and add the following code`: import WhatsApp from "whatsapp" ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( ) ; function custom_callback ( statusCode , headers , body , resp , err ) { console .
-    log ( ` Incoming webhook status code: ${ statusCode } \n\nHeaders: ${ JSON .
-    stringify ( headers ) } \n\nBody: ${ JSON .
-    stringify ( body ) } ` ) ; if ( resp ) { resp .
-    writeHead ( 200 , { "Content-Type" : "text/plain" } ) ; resp .
-    end ( ) ; } if ( err ) { console .
-    log ( ` ERROR: ${ err } ` ) ; } } wa .
-    webhooks .
-    start ( custom_callback ) ; Anatomy The code above has a custom callback function that receives an several parameters, including the response object to respond back to the Cloud API, and starts the webhook listener.
-    From top to bottom: Creates a new instance of the WhatsApp SDK class.
-    Logs the status code of the request, the headers received, and the request body.
-    You should see it print a status code of 200 .
-    After checking for the response body, it sends a 200 (success) back to the Cloud API for this request.
-    This marks the message as delivered (see to also mark message as read) and the webhook service will not reattempt sending this message again.
-    Any errors are logged.
-    The webhooks listener is started.
-    This accepts either a GET request or POST .
-    Only post requests call the custom callback.
-    GET requests are only for verifying subscription by the Cloud API.
-    Run Run your application by putting in the following command into terminal: npm listen.js The application will start the HTTP server.
-    It's ready to verify subscription from the Cloud API, and then receive incoming messages and call the callback function.
-    Setup To have a valid HTTPS URL as required for this example, you can use a tool such as and tunnel requests from port 443 to the server listening port on 3000.
-    To do this with ngrok, use the command ngrok http 3000 .
-    You'll receive a URL that you can register with the Cloud API to register your webhooks.
-    To finish webhook registration, follow the official docs using the WEBHOOK_VERIFICATION_TOKEN string that you set in your .env file and the URL for your webhook.
-    The listener address will be similar to https://<<YOUR_SUBDOMAIN>>.ngrok.io/webhook (no trailing slash if set to just webhook ).
-    The server listens for the path set in the WEBHOOK_ENDPOINT environmental variable.
-    Receive Use your WhatsApp app (e.g.
-    mobile, desktop, web, etc.) and send a message to the test number.
-    Shortly after the message is sent, you should see the details of the incoming webhook request printed in terminal.</li><li>.sticker | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.messages.sticker() Send an existing self-hosted or Meta hosted sticker.
-    Static and animated third-party outbound stickers are supported in addition to all types of inbound stickers.
-    A static sticker needs to be 512x512 pixels and cannot exceed 100 KB.
-    An animated sticker must be 512x512 pixels and cannot exceed 500 KB.
-    Meta or self hosted options have different object requirements Supported video formats: WEBP Example: Send a Meta-hosted message and then send an externally hosted sticker to the phone number 12345678901 .
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; const meta_hosted_sticker = { "id" : "123456abcde" , } ; const self_hosted_sticker = { "link" : new URL ( "https://example.com/example_1234.webp" ) .
-    href , } ; await wa .
-    messages .
-    sticker ( meta_hosted_sticker , 12345678901 ) ; wa .
-    messages .
-    sticker ( self_hosted_sticker , 12345678901 ) ; Arguments body : — the object describing the sticker to send.
-    recipient : number — the recipient's phone number with country code.
-    replyMessageId : string (optional) — the received WhatsApp message Id to reply back to.
-    Returns Promise — Server response object on success.</li><li>AudioMediaObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Audio Media Object The object required for sending an audio message.
-    Can either be a self-hosted and publicly accessible audio, or an existing Meta-hosted audio file in a supported format.
-    Meta or self hosted options have different object requirements.
-    Meta Hosted This audio file must already exist.
-    Example { "id" : "AUDIO_ID" , } Properties id : string — the audio file Id.
-    This Id is returned in the response body when the audio file was first uploaded.
-    Self Hosted The audio file must be readily accessible by public addresses.
-    Example { "link" : new URL ( "https://www.example.com" ) .
-    href , } Properties link : string — link to the publicly hosted audio.</li><li>.start | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.webhooks.start() This starts the web server listening the defined port for webhook events.
-    It handles both GET and POST requests made to the webhook endpoint path.
-    GET request is verified using the webhook verification token, a successful match sends back the hub.challenge to the Cloud API request in order to validate a webhook subscription.
-    A successful verification string match sends back the challenge code with a 200 response.
-    A verification string match failure results in a 401 status code response and your callback is called with an error message, a 401 value for the status code, and the request headers.
-    POST request are received and the payload is checked against for authenticity against the x-hub-signature-256 using the shared app secret.
-    A calculated x-hub-signature-256 string match failure results in a 401 status code response being sent and your callback is called with an error message, a 401 value for the status code, the request headers, and the request body.
-    Example: Start the web server and print out valid message webhook event bodies.
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; async function webhookCallbackFunction ( statusCode , reqHeaders , body , resp , err ) { console .
-    log ( ` Incoming webhook response status code: ${ statusCode } \n\nHeaders: ${ JSON .
-    stringify ( reqHeaders ) } ` ) ; if ( resp ) { if ( body ?.
-    entry [ 0 ] .
-    changes [ 0 ] .
-    field == "messages" && body .
-    entry [ 0 ] .
-    changes [ 0 ] .
-    value .
-    messages ) console .
-    log ( ` Messages Object: ${ JSON .
-    stringify ( body .
-    entry [ 0 ] .
-    changes [ 0 ] .
-    value .
-    messages ) } ` ) ; // Send a 200 so the webhooks service knows you received the message resp .
-    writeHead ( statusCode ) ; resp .
-    end ( ) ; } if ( err ) { console .
-    log ( ` ERROR: ${ err } ` ) ; resp .
-    end ( ) ; } } wa .
-    webhooks .
-    start ( webhookCallbackFunction ) ; Arguments webhookCallbackFunction : — The callback that gets called during POST requests made to the webhook listener endpoint.
-    Returns boolean — the HTTP server running state.</li><li>Project setup | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Set up your Node.js Project Learn the basics for setting up the WhatsApp Business Platform SDK for your Node.js project and important details about the SDK.
-    Start a new project If you new to using the WhatsApp Business Platform Node.js SDK, first follow the provided for steps to send your first message and perform basic project setup and configuration.
-    Installation You can quickly install the WhatsApp Business Platform Node.js SDK as follows: npm install whatsapp note This SDK is for server-side with Node.js only.
-    It does not support web browser or frontend applications.
-    Development The SDK assumes you are in development mode by default.
-    The logger can be enabled globally in the WhatsApp Business Platform Node.js SDK by setting a DEBUG ( or process.env.DEBUG ) environmental variable to true .
-    danger Enabling the logger can log user information, secrets, and other secure information.
-    Production A production system (where NODE_ENV=production ), does not read from a .env file.
-    This is to protect the security posture of having tokens being stored in accessible a file system.
-    The environmental variables need to exist to the application before the WhatsApp class is instantiated.
-    info TypeScript support The WhatsApp Business Platform Node.js SDK supports TypeScript with TypeScript declaration files for WhatsApp Business Platform APIs.
-    These files help you type-check usage of the WhatsApp Business Platform Node.js SDK in your code, along with hints and code completion in TypeScript compatible IDEs.</li><li>OrgObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Org Object The object describing an organization affiliation of a contact.
-    Example { "company" : "COMPANY" , "department" : "DEPARTMENT" , "title" : "TITLE" } Properties company : string (optional) — company name.
-    department : string (optional) — contact's department of employ.
-    title : string (optional) — contact's work title.</li><li>SimpleTextObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Text Object The general object containing a text string.
-    Example { "text" : "MESSAGE_CONTENT" , } Properties text : string — a text string to be displayed.</li><li>ActionObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Action Object The object describing a actions taken for different types interactive messages.
-    Different actions have different object requirements.
-    Example Single product message Example { "catalog_id" : "CATALOG_ID" , "product_retailer_id" : "ID_TEST_ITEM_1" } Properties catalog_id : string (optional) — unique identifier of the Facebook catalog linked to your WhatsApp Business Account.
-    Required for single product messages and multi-product messages.
-    product_retailer_id : string (optional) — unique identifier of the product in a catalog.
-    Required for Single Product Messages and Multi-Product Messages.
-    Multi-product message Example { "catalog_id" : "CATALOG_ID" , "sections" : [ { "title" : "section-title" , "product_items" : [ { "product_retailer_id" : "product-SKU-in-catalog" } , { "product_retailer_id" : "product-SKU-in-catalog" } , ] } , { "title" : "section-title" , "product_items" : [ { "product_retailer_id" : "product-SKU-in-catalog" } , { "product_retailer_id" : "product-SKU-in-catalog" } , ] } ] } Properties catalog_id : string — unique identifier of the Facebook catalog linked to your WhatsApp Business Account.
-    Required for single product messages and multi-product messages.
-    sections : [] — array of sections for list message or multi-product messages.
-    Minimum of 1, maximum of 10.
-    See section object.
-    List message Example { "button" : "BUTTON_TEXT" , "sections" : [ { "title" : "SECTION_1_TITLE" , "rows" : [ { "id" : "SECTION_1_ROW_1_ID" , "title" : "SECTION_1_ROW_1_TITLE" , "description" : "SECTION_1_ROW_1_DESCRIPTION" } , { "id" : "SECTION_1_ROW_2_ID" , "title" : "SECTION_1_ROW_2_TITLE" , "description" : "SECTION_1_ROW_2_DESCRIPTION" } ] } , { "title" : "SECTION_2_TITLE" , "rows" : [ { "id" : "SECTION_2_ROW_1_ID" , "title" : "SECTION_2_ROW_1_TITLE" , "description" : "SECTION_2_ROW_1_DESCRIPTION" } , { "id" : "SECTION_2_ROW_2_ID" , "title" : "SECTION_2_ROW_2_TITLE" , "description" : "SECTION_2_ROW_2_DESCRIPTION" } ] } ] } Properties button : string — button content.
-    It cannot be an empty string and must be unique within the message.
-    Emojis are supported, markdown is not.
-    sections : [] — array of sections for list message or multi-product messages.
-    Minimum of 1, maximum of 10.
-    Reply button Example { "buttons" : [ { "type" : "reply" , "reply" : { "id" : "UNIQUE_BUTTON_ID_1" , "title" : "BUTTON_TITLE_1" } } , { "type" : "reply" , "reply" : { "id" : "UNIQUE_BUTTON_ID_2" , "title" : "BUTTON_TITLE_2" } } ] } Properties button : string — button content.
-    It cannot be an empty string and must be unique within the message.
-    Emojis are supported, markdown is not.
-    buttons : [] — array of reply buttons (maximum of 3, minimum of 1).</li><li>.template | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.messages.template() Send an existing approved and enabled message template.
-    This request dynamically fills out a message template with provided component parameters.
-    Example: Send a template message called "Subscribe" in the en_US language with a parameter to fill dynamic text in the body to the recipient 12345678901 .
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; const newsletter_subscription_body = { "name" : "Subscribe" , "language" : { "policy" : "deterministic" , "code" : "en_US" } , "components" : [ { "type" : "body" , "parameters" : [ { "type" : "text" , "text" : "newsletter" } ] } ] } ; await wa .
-    messages .
-    template ( newsletter_subscription_body , 12345678901 ) ; Arguments body : — the object describing the template to use and any components to dynamically fill the parameters with.
-    recipient : number — the recipient's phone number with country code.
-    replyMessageId : string (optional) — the received WhatsApp message Id to reply back to.
-    Returns Promise — Server response object on success.</li><li>RequestCodeObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Request Code Object Object used for requesting a verification code based on the desired method and language to the number currently being used by the API.
-    Example { "code_method" : "SMS" , "language" : "en" } Properties code_method : "SMS" | "VOICE" — the state of updating the two-step verification pin.
-    language : string — the two-character code of the language or locale to use.
-    For all codes, see .</li><li>this | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Two-step verification class This is the two-step verification class that is instantiated by the WhatsApp class.
-    The two-step verification class object can be referenced with <<SDK_NAMESPACE>>.twoStepVerification to access the member functions.
-    Example: Set the two-step verification pin to 123456 .
-    import WhatsApp from 'whatsapp' ; const senderNumberId = 12345678901234567890 ; const wa = new WhatsApp ( senderNumberId ) ; wa .
-    twoStepVerification .
-    setPin ( 123456 ) ; Arguments config : — SDK configuration object.
-    HttpsClient : RequesterClass — the HTTPS requester class object, including the HTTP client instance to make requests with.
-    Returns Object — Two-step verification class instance.</li><li>.video | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.messages.video() Send an existing self-hosted or Meta hosted video file.
-    Supported video formats: MP4 3GP Example: Send a Meta-hosted message and then send an externally hosted video file to the phone number 12345678901 .
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; const meta_hosted_video = { "id" : "123456abcde" , "caption" : "My video file" , "filename" : "example.mp4" } ; const self_hosted_video = { "link" : new URL ( "https://example.com/example_1234.mp4" ) .
-    href , "caption" : "My video file" , "filename" : "example.mp4" } ; await wa .
-    messages .
-    video ( meta_hosted_video , 12345678901 ) ; wa .
-    messages .
-    video ( self_hosted_video , 12345678901 ) ; Arguments body : — the object describing the video file to send.
-    recipient : number — the recipient's phone number with country code.
-    replyMessageId : string (optional) — the received WhatsApp message Id to reply back to.
-    Returns Promise — Server response object on success.</li><li>LocationObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Location Object The object describing location.
-    Example { "longitude" : "37.4850729" , "latitude" : "-122.1527671" , "name" : "Meta Headquarters" , "address" : "1 Hacker Way, Menlo Park, CA 94025, USA" } Properties longitude : string — longitude of the location.
-    latitude : string — latitude of the location.
-    name : string (optional) — name of the location.
-    address : string (optional) — address of the location.
-    Only displayed if name is present.</li><li>NameObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Name Object The object describing a contact's name.
-    Example { "formatted_name" : "NAME" , "first_name" : "FIRST_NAME" , "last_name" : "LAST_NAME" , "middle_name" : "MIDDLE_NAME" , "suffix" : "SUFFIX" , "prefix" : "PREFIX" } Properties formatted_name : string — contact's name as it's to be displayed.
-    first_name : string (optional) — contact's first name.
-    last_name : string (optional) — contact's last name.
-    middle_name : string (optional) — contact's middle name.
-    suffix : string (optional) — contact's name suffix.
-    prefix : string (optional) — contact's name prefix.</li><li>Tags | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    Tags G</li><li>VideoMediaObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Video Media Object The object required for sending a video message.
-    Can either be a self-hosted and publicly accessible video, or an existing Meta-hosted video in a supported format.
-    Meta or self hosted options have different object requirements.
-    Meta Hosted Video This video must already exist.
-    Example { "id" : "VIDEO_ID" , "caption" : "CAPTION" } Properties id : string — the video Id.
-    This Id is returned in the response body when the video was first uploaded.
-    caption : string (optional) — text to be displayed with the video to describe the video.
-    Self Hosted video The video must be readily accessible by public addresses.
-    Example { "link" : new URL ( "https://www.example.com" ) .
-    href , "caption" : "CAPTION" } Properties link : string — link to the publicly hosted video.
-    caption : string (optional) — text to be displayed with the video to describe the video.</li><li>HeaderObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Header Object The object describing the content displayed in the header of a message.
-    Example { "type" : "text" , "text" : "header-content" } Properties type : "document", "image", "text", or "video" — header type you would like to use.
-    text can be used with list messages, reply buttons, and multi-product messages.
-    video can be used with reply buttons.
-    image can be used with reply buttons.
-    document can be used with reply buttons.
-    document : (optional) — the media object for this document.
-    Required if type is document .
-    image : (optional) — the media object for this image.
-    Required if type is image .
-    text : string (optional) — text for the header.
-    Formatting allows emojis, but not markdown.
-    Maximum length: 60 characters.
-    video : (optional) — the media object for this video.
-    Required if type is video .</li><li>this | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Webhooks class This is the webhooks class that is instantiated by the WhatsApp class.
-    The webhooks class object can be referenced with <<SDK_NAMESPACE>>.webhooks to access the member functions.
-    Example: Start the web server and print out the response status code, request headers, and if it exists, the body.
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; async function custom_callback ( statusCode , reqHeaders , body , resp , err ) { console .
-    log ( ` Incoming webhook response status code: ${ statusCode } \n\nHeaders: ${ JSON .
-    stringify ( reqHeaders ) } ` ) ; // Send a 200 so the webhooks service knows you received the message if ( resp ) { if ( body ) console .
-    log ( ` Body: ${ JSON .
-    stringify ( body ) } ` ) ; resp .
-    writeHead ( statusCode , { "Content-Type" : "text/plain" } ) ; resp .
-    end ( ) ; } if ( err ) { console .
-    log ( ` ERROR: ${ err } ` ) ; resp .
-    end ( ) ; } } wa .
-    webhooks .
-    start ( custom_callback ) ; Arguments config : — SDK configuration object.
-    userAgent : string — the user-agent header parameter to send in responses.
-    Returns Object — Webhooks class instance.</li><li>.contacts | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page WhatsApp.messages.contacts() Send a message with contact(s) information.
-    Example: Send a contact to the phone number 12345678901 .
-    import WhatsApp from 'whatsapp' ; const senderNumber = 12345678901234567890 ; const wa = new WhatsApp ( senderNumber ) ; const contact = [ { "addresses" : [ { "street" : "STREET" , "city" : "CITY" , "state" : "STATE" , "zip" : "ZIP" , "country" : "COUNTRY" , "country_code" : "COUNTRY_CODE" , "type" : "HOME" } ] , "birthday" : "YEAR_MONTH_DAY" , "emails" : [ { "email" : "EMAIL" , "type" : "WORK" } ] , "name" : { "formatted_name" : "NAME" , "first_name" : "FIRST_NAME" , "last_name" : "LAST_NAME" , "middle_name" : "MIDDLE_NAME" , "suffix" : "SUFFIX" , "prefix" : "PREFIX" } , "org" : { "company" : "COMPANY" , "department" : "DEPARTMENT" , "title" : "TITLE" } , "phones" : [ { "phone" : "PHONE_NUMBER" , "type" : "HOME" } , { "phone" : "PHONE_NUMBER" , "type" : "WORK" , "wa_id" : "PHONE_OR_WA_ID" } ] , "urls" : [ { "url" : "URL" , "type" : "WORK" } , { "url" : "URL" , "type" : "HOME" } ] } ] ; wa .
-    messages .
-    contacts ( contact , 12345678901 ) ; Arguments body : [] — array of contacts to send.
-    recipient : number — the recipient's phone number with country code.
-    replyMessageId : string (optional) — the received WhatsApp message Id to reply back to.
-    Returns Promise — Server response object on success.</li><li>ButtonObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Reply Buttons Object The object describing a reply button's properties.
-    Example { "id" : "UNIQUE_BUTTON_ID_1" , "title" : "BUTTON_TITLE_1" } Properties title : string — button title.
-    It cannot be an empty string and must be unique within the message.
-    Emojis are supported, markdown is not.
-    Maximum length of 20 characters.
-    id : string — unique identifier for your button.
-    This Id is returned in the webhook when the button is clicked by the user.
-    Maximum length of 256 characters.</li><li>PhoneObject | WhatsApp Business Platform Node.js SDK for the Cloud API, hosted by Meta The project is archived - go to to learn more.
-    On this page Phones Object The object describing a contact's phone number.
-    Example { "phone" : "PHONE_NUMBER" , "type" : "WORK" , "wa_id" : "PHONE_OR_WA_ID" } Properties phone : string (optional) — contact's phone number.
-    type : "CELL", "MAIN", "IPHONE", "HOME", or "WORK" (optional) — type of phone number.
-    wa_id : string (optional) — the contact's phone number or WhatsApp Id.</li></ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embedded Movie with Controls</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #141A32;
+        }
+        .container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        .fullscreen-iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: none;
+            z-index: 0;
+        }
+        .overlay-iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: rgba(0, 0, 255, 0.3); /* Blue background with some transparency */
+            z-index: 1;
+            pointer-events: none;
+        }
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            gap: 10px;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <iframe class="fullscreen-iframe" src="https://vidsrc.me/embed/movie?tmdb=1100782" frameborder="0" referrerpolicy="origin" allowfullscreen></iframe>
+        <div class="overlay-iframe"></div>
+        <div class="controls">
+            <button class="button" onclick="alert('Play clicked!')">Play</button>
+            <button class="button" onclick="alert('Skip clicked!')">Skip</button>
+            <button class="button" onclick="fullScreenVideo()">Full Screen</button>
+        </div>
+    </div>
+
+    <script>
+        function fullScreenVideo() {
+            var iframe = document.querySelector('.fullscreen-iframe');
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.mozRequestFullScreen) { // Firefox
+                iframe.mozRequestFullScreen();
+            } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) { // IE/Edge
+                iframe.msRequestFullscreen();
+            }
+        }
+    </script>
+</body>
+</html>
