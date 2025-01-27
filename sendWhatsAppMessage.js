@@ -1,8 +1,8 @@
 const axios = require('axios');
+require('dotenv').config();
 
-// WhatsApp API credentials
-const accessToken = 'EAAIFtsWvcPoBO6Cpy4wP4SYCvwDESnQ2I27VukXRx3DlC1yTp08NP5d31YpZAnw1u6UJbmbfIn6eaZCsGSlUQSJUwcNblMNy7gZC2JHKsqBUZBMzOkNs0DpLsBxra3VlLo8CxK14HBfTMhnHVD9JgQYjirrQVNEMqpc1P8xdF2JBpxqlPTZCZAfwZCZCXfnoPvN7IzZABUMaaDeVmBOueIkti5AZAPDG5kpIYzeXUZD';
-const phoneNumberId = '469243756268116';
+const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
+const phoneNumberId = process.env.WHATSAPP_PHONE_NUMBER_ID;
 const recipientNumber = '2348148246314'; // Replace with the target phone number
 
 async function sendWhatsAppMessage() {
