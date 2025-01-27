@@ -10,4 +10,4 @@ class WhatsAppAdapter extends PlatformAdapter {
     }
 }
 
-export default WhatsAppAdapter;
+export default WhatsAppAdapter ;
