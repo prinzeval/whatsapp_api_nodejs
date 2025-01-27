@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 // WhatsApp API credentials
-const accessToken = 'EAAIFtsWvcPoBO55uvYW4VeH8XjvyBAxLBMbQfZAhFc8z8L4Nk9ZCvKilQxOcPdZCiyD7lDN6AUWFXyaeuZAoYTOzYN8mUu3W0QjAurgjHZCN91UBZBnurKsEMPhWIteEQ3SCviw3KrvsZBGsQtfiEZBjggSzZC5RZC8Cwb45s93z3X6pQ9LLFih1Perej4YNVZBo91iGjrQbehQdZCoAhZCOtRE6mHaLJcZCvLnmJELtsZD';
+const accessToken = 'EAAIFtsWvcPoBO6Cpy4wP4SYCvwDESnQ2I27VukXRx3DlC1yTp08NP5d31YpZAnw1u6UJbmbfIn6eaZCsGSlUQSJUwcNblMNy7gZC2JHKsqBUZBMzOkNs0DpLsBxra3VlLo8CxK14HBfTMhnHVD9JgQYjirrQVNEMqpc1P8xdF2JBpxqlPTZCZAfwZCZCXfnoPvN7IzZABUMaaDeVmBOueIkti5AZAPDG5kpIYzeXUZD';
 const phoneNumberId = '469243756268116';
 const recipientNumber = '2348148246314'; // Replace with the target phone number
 
